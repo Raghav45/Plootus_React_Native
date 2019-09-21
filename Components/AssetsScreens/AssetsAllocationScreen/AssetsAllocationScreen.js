@@ -2,7 +2,20 @@ import React, { Component } from 'react'
 import { Image,Text, StyleSheet, ScrollView,View,TouchableOpacity,Dimensions} from 'react-native'
 import AssetsAllocationAccordion from './AssetsAllocationAccordion';
 import {MaterialIcons} from '@expo/vector-icons'
-import {VictoryPie ,VictoryTheme} from 'victory-native'
+import PieChart from '../../common/PieChart'
+
+//var assetsallocationC_data = [		
+    //     { x: "CAT 1", y: 75 ,r:120,ir:90},		
+    //     { x: "CAT 2", y: 140 ,r:120,ir:90},		
+    //     { x: "CAT 3", y: 65 ,r:120,ir:90},		
+    //     { x: "CAT 4", y: 25 ,r:120,ir:90}		
+    // ]		
+    // var assetsallocationT_data = [		
+    //     { x: "TYPE A", y: 75 ,r:120,ir:90},		
+    //     { x: "TYPE A", y: 140 ,r:120,ir:90},		
+    //     { x: "TYPE A", y: 65 ,r:120,ir:90},		
+    //     { x: "TYPE A", y: 25 ,r:120,ir:90}		
+    // ]
 
 export default class AssetsAllocationScreen extends Component {
 
@@ -23,11 +36,12 @@ export default class AssetsAllocationScreen extends Component {
            tabBarIcon: ({tintColor}) => (
             <Image
                 source={require("../../../assets/assetsIcon.png")}
-                style={{ width: 26, height: 26, tintColor:tintColor}}
+                style={{ width: 33, height: 33, tintColor:tintColor}}
               />
            ),
     }
     state = {
+        
         expanded:true,
         type:'categories',
         activeAC:true,
@@ -35,35 +49,36 @@ export default class AssetsAllocationScreen extends Component {
         colorAC:'#416ce1',
         colorAT:'#b3b3b3',
         bwidthAC:5,
-        bwidthAT:0
+        bwidthAT:0,
+        assetsallocationC_data: [		
+                 { x: "CAT 1", y: 75 ,r:120,ir:90},		
+                 { x: "CAT 2", y: 140 ,r:120,ir:90},		
+                 { x: "CAT 3", y: 65 ,r:120,ir:90},		
+                 { x: "CAT 4", y: 25 ,r:120,ir:90}		
+             ],		
+        assetsallocationT_data : [		
+                 { x: "TYPE A", y: 75 ,r:120,ir:90},		
+                 { x: "TYPE A", y: 140 ,r:120,ir:90},		
+                 { x: "TYPE A", y: 65 ,r:120,ir:90},		
+                 { x: "TYPE A", y: 25 ,r:120,ir:90}		
+             ]
     }
     renderType = ()=>{
+         // let d = [...this.state.pieData]		
+        // this.setState({pieData:d})
         return(
             <View style = {styles.container}>
             <View>
-               <VictoryPie
-                   height={280}
-                   colorScale={[ "#416ce1",'green' ]}
-                   data={[
-                       { x: "Cats", y: 10 },
-                       { x: "Dogs", y: 10 },
-                       { x: "Birds", y: 30 }
-                       ]}
-                   innerRadius={90}
-                   radius={120}
-                   theme={VictoryTheme.material}
-                   labels={(d) => `${d.y}`}
-                   labelPosition="centroid"
-                   labelRadius={100}
-                   style={{ labels: { fill: "white", fontSize: 10, fontWeight: "bold" } }}
-               />
+               <PieChart data={this.state.assetsallocationT_data}/>
+                  
+               
            </View>
            <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
                <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                    <Text style={[styles.title]}>Total</Text>
                </View>
                <View style={{flexDirection:'row',alignItems:'center'}}>
-                   <Text style={{fontSize:18,fontWeight:'600',color:'#1e2133',marginRight:10}}>$10000</Text>
+                   <Text style={{fontSize:18,fontWeight:'600',color:'#1e2133',marginRight:10}}>$10,000</Text>
                    <MaterialIcons name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
                </View>                
            </TouchableOpacity>
@@ -74,32 +89,18 @@ export default class AssetsAllocationScreen extends Component {
         );
     }
     renderCategories = () =>{
+       // this.setState({pieData:assetsallocationC_data})	
         return(
             <View style = {styles.container}>
                  <View>
-                    <VictoryPie
-                        height={280}
-                        colorScale={[ "#416ce1",'green' ]}
-                        data={[
-                            { x: "Cats", y: 35 },
-                            { x: "Dogs", y: 40 },
-                            { x: "Birds", y: 155 }
-                            ]}
-                        innerRadius={90}
-                        radius={120}
-                        theme={VictoryTheme.material}
-                        labels={(d) => `${d.y}`}
-                        labelPosition="centroid"
-                        labelRadius={100}
-                        style={{ labels: { fill: "white", fontSize: 10, fontWeight: "bold" } }}
-                    />
+                 <PieChart data={this.state.assetsallocationC_data}/>	
                 </View>
                 <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
                     <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                         <Text style={[styles.title]}>Total</Text>
                     </View>
                     <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text style={{fontSize:18,fontWeight:'600',color:'#1e2133',marginRight:10}}>$10000</Text>
+                        <Text style={{fontSize:18,fontWeight:'600',color:'#1e2133',marginRight:10}}>$10,000</Text>
                         <MaterialIcons name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
                     </View>                
                 </TouchableOpacity>
@@ -137,6 +138,9 @@ export default class AssetsAllocationScreen extends Component {
         }
         return items;
     }
+
+   
+
     render() {
         
         return (
@@ -162,7 +166,10 @@ export default class AssetsAllocationScreen extends Component {
                     </TouchableOpacity>
                 </View>
                 {this.state.type =='categories'?this.renderCategories():this.renderType()}
-                <ScrollView>
+                <ScrollView
+                	onTouchStart={(ev) => { this.setState({ content: { flex: 1 } }); }}
+                    onMomentumScrollEnd={(e) => { this.setState({ content: {} }); }}
+                    onScrollEndDrag={(e) => { this.setState({ content: {} }); }}>
                 {this.state.expanded && this.renderAccordians()}
                 </ScrollView>
                 
@@ -225,7 +232,7 @@ mydata1=[
     {
         key:'1',
         title:'401(k)',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8345376454894',
         dest:'Proposed401KFundScreen',
@@ -234,47 +241,47 @@ mydata1=[
     {
         key:'2',
         title:'529',
-        value:'$1000',
+        value:'$1,000',
         color:'green',
         accno:'8945648757495',
         dest:'Plan529Screen',
-        costBasis: '1000'
+        costBasis: '1,000'
     },
     {
         key:'3',
         title:'Real Estate',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8945648757495',
         dest:'RealEstateScreen',
-        costBasis: '1000'
+        costBasis: '1,000'
     },
     {
-        key:'3',
+        key:'4',
         title:'Bank Account',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8945648757495',
         dest:'BankAccountScreen',
-        costBasis: '1000'
+        costBasis: '1,000'
     },
     {
-        key:'3',
+        key:'5',
         title:'Retirement Plans',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8945648757495',
         dest:'RetirementPlansScreen',
-        costBasis: '1000'
+        costBasis: '1,000'
     },
     {
-        key:'3',
+        key:'6',
         title:'Other Assets',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8945648757495',
         dest:'OtherAssets',
-        costBasis: '1000'
+        costBasis: '1,000'
     },
     
 ]

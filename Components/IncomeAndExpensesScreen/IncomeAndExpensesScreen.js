@@ -1,9 +1,29 @@
 import React, { Component } from 'react'
 import { Image, Text, StyleSheet, ScrollView,View,TouchableOpacity,Dimensions,Picker,Icon} from 'react-native'
 import {MaterialIcons} from '@expo/vector-icons'
-import {VictoryPie ,VictoryTheme,VictoryBar,VictoryChart} from 'victory-native'
+import {VictoryPie ,VictoryTheme,VictoryAxis,VictoryBar,VictoryChart} from 'victory-native'
 import Accordions from './IncomeAndExpensesAccordion';
 import IncomeAndExpensesAccordion from './IncomeAndExpensesAccordion'
+import { Dropdown } from 'react-native-material-dropdown';
+import PieChart from '../common/PieChart';
+var income_data = [
+    { x: "Income A", y: 75 ,r:120,ir:90},
+    { x: "Income B", y: 140 ,r:120,ir:90},
+    { x: "Income C", y: 65 ,r:120,ir:90},
+    { x: "Income D", y: 25 ,r:120,ir:90}
+    ]
+    var expense_data = [
+        { x: "Expense A", y: 75 ,r:120,ir:90},
+        { x: "Expense B", y: 140 ,r:120,ir:90},
+        { x: "Expense C", y: 65 ,r:120,ir:90},
+        { x: "Expemse D", y: 25 ,r:120,ir:90}
+        ]
+
+
+
+
+
+
 export default class IncomeAndExpensesScreen extends Component {
 
     static navigationOptions = {
@@ -23,7 +43,7 @@ export default class IncomeAndExpensesScreen extends Component {
            tabBarIcon: ({tintColor}) => (
             <Image
                 source={require("../../assets/incomeIcon.png")}
-                style={{ width: 26, height: 26, tintColor:tintColor}}
+                style={{ width: 37, height: 37, tintColor:tintColor}}
               />
         ),
     }
@@ -31,8 +51,8 @@ export default class IncomeAndExpensesScreen extends Component {
         language:'this_month',
         expanded:true,
         type:'income',
-        activeI:false,
         activeC:true,
+        activeI:false,
         activeE:false,
         colorI:'#416ce1',
         colorC:'#b3b3b3',
@@ -61,35 +81,61 @@ export default class IncomeAndExpensesScreen extends Component {
                             <Picker.Item label="Last Month" value="last_month" />
                             <Picker.Item label="This Year" value="this_year" />
                             <Picker.Item label="Last Year" value="last_year" />
-                            <Picker.Item label="Custom" value="Custom" />
+                            <Picker.Item label="custom" value="custom" />
                         </Picker>
                     </View>
                 </View>
-                <View style = {{marginBottom:-5}}>
+                <View style = {{paddingLeft:6,paddingTop:-20}}>
                     <VictoryChart
                     theme={VictoryTheme.material}
-                    domainPadding={{ x: 15 }}
-                    height={250}
-                    >
+                    domainPadding={{ x:[15,0]}}
+                   
+                    //padding={{left:40}} 
+                    height = {250}
                     
-                    <VictoryBar
-                    data={[
-                        { x: 1, y: 1, y0: -2 },
-                        { x: 2, y: 0, y0: -1 },
-                        { x: 3, y: -3, y0: 0 },
-                        { x: 4, y: 3, y0: 1 },
-                        { x: 5, y: 3, y0: 2 }
-                    ]}
-                    style={{data:{fill:'orange'}}}
+                    >
+                    <VictoryAxis
+                        style={{grid: {
+                            stroke: "white"
+                        }}} 
+                        tickValues={['Sept \'19','Oct \'19','Nov \'19','Dec \'19','Jan \'20']}
+                        offsetY={49}
+                       
+                        /> 
+                   <VictoryAxis
+                         
+                        dependentAxis
+                       
+                        tickFormat={(t) => (t<0)?`-${t*-1}.0k`:`${t}.0k`}
+                        style={{marginLeft:10}} 
+                        crossAxis={false}
                     />
-                    </VictoryChart>
+                   
+                    <VictoryBar
+                    
+                    
+                    data={[
+                        { x: 1, y: -1},
+                        { x: 2, y: 1},
+                        { x: 3, y: -3},
+                        { x: 4, y: 3},
+                        { x: 5, y: 3}
+                    ]}
+                    style={{data:{fill:(d) => d.y < 0 ? "red" : "green"}}}
+                    />
+
+
+
+                
+                    
+                </VictoryChart>
                 </View>
                 <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
                     <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                         <Text style={[styles.title]}>Total  cashflow</Text>
                     </View>
                     <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text style={{fontSize:18,fontWeight:'600',color:'red',marginRight:10}}> - $1000</Text>
+                        <Text style={{fontSize:18,fontWeight:'600',color:'red',marginRight:10}}> - $1,000</Text>
                         <MaterialIcons name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
                     </View>                
                 </TouchableOpacity>  
@@ -127,29 +173,14 @@ export default class IncomeAndExpensesScreen extends Component {
                     </View>
                 </View>
             <View style = {{marginBottom:-5}}>
-               <VictoryPie
-                   height={280}
-                   colorScale={[ "#416ce1",'green' ]}
-                   data={[
-                       { x: "Cats", y: 10 },
-                       { x: "Dogs", y: 10 },
-                       { x: "Birds", y: 30 }
-                       ]}
-                   innerRadius={90}
-                   radius={120}
-                   theme={VictoryTheme.material}
-                   labels={(d) => `${d.y}`}
-                   labelPosition="centroid"
-                   labelRadius={100}
-                   style={{ labels: { fill: "white", fontSize: 10, fontWeight: "bold" } }}
-               />
+                <PieChart data={expense_data}/>
            </View>
            <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
                <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                    <Text style={[styles.title]}>Total</Text>
                </View>
                <View style={{flexDirection:'row',alignItems:'center'}}>
-                   <Text style={{fontSize:18,fontWeight:'600',color:'red',marginRight:10}}>$10000</Text>
+                   <Text style={{fontSize:18,fontWeight:'600',color:'red',marginRight:10}}>$10,000</Text>
                    <MaterialIcons name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
                </View>                
            </TouchableOpacity>
@@ -185,29 +216,14 @@ export default class IncomeAndExpensesScreen extends Component {
                     </View>
                 </View>
                     <View style = {{marginBottom:-5}}>
-                    <VictoryPie
-                   height={280}
-                   colorScale={[ "#416ce1",'green' ]}
-                   data={[
-                       { x: "Cats", y: 10 },
-                       { x: "Dogs", y: 10 },
-                       { x: "Birds", y: 30 }
-                       ]}
-                   innerRadius={90}
-                   radius={120}
-                   theme={VictoryTheme.material}
-                   labels={(d) => `${d.y}`}
-                   labelPosition="centroid"
-                   labelRadius={100}
-                   style={{ labels: { fill: "white", fontSize: 10, fontWeight: "bold" } }}
-               />
-           </View>
+                    <PieChart data={income_data}/>
+                </View>
            <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
                <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
-                   <Text style={[styles.title]}>Mics Inflow</Text>
+                   <Text style={[styles.title]}>Misc. Inflow</Text>
                </View>
                <View style={{flexDirection:'row',alignItems:'center'}}>
-                   <Text style={{fontSize:18,fontWeight:'600',color:'green',marginRight:10}}>$10000</Text>
+                   <Text style={{fontSize:18,fontWeight:'600',color:'green',marginRight:10}}>$10,000</Text>
                    <MaterialIcons name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
                </View>                
            </TouchableOpacity>
@@ -321,7 +337,7 @@ export default class IncomeAndExpensesScreen extends Component {
 
     render() {
         return (
-            <View style = {styles.mainContainer}>
+            <ScrollView style = {styles.mainContainer}>
                 <View style={styles.tabNavigation}>
                     <TouchableOpacity 
                     style={{ borderBottomColor: this.state.colorC,
@@ -358,7 +374,7 @@ export default class IncomeAndExpensesScreen extends Component {
                     {this.state.type=='income' && this.state.expanded ?this.renderCashflowAccordion():this.state.type=='expense' && this.state.expanded?this.renderIncomeAccordion(): this.state.type=='cashflow' && this.state.expanded ?this.renderExpensesAccordion():<Text></Text>}
                 </ScrollView>
                 
-            </View>
+            </ScrollView>
         )
     }
 }
@@ -414,14 +430,18 @@ const styles = StyleSheet.create({
         backgroundColor: "#416ce1",
         borderRadius: 4,
         alignItems:'center',
-        padding:2
+        padding:2,
+        height:40,
+        marginTop:10
      },
      pickerIcon: {
         color: '#ffffff',
         position: "absolute",
-        bottom: 11,
-        right: 10,
-        fontSize: 20
+        bottom: 7,
+        right: 17,
+        marginTop:10,
+        fontSize: 20,
+        
      },
     
      pickerContent: {
@@ -435,12 +455,12 @@ CashflowData=[
     {
         key:'0987',
         title:'June 2019',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         items:[
-            {key:'024DDMB750',name:'Misc Inflows',value:'$1000',date:"Jan 9 2018", balance:'Directpay Full Balance'},
-            {key:'024DDMB757',name:'Uncategorized',value:'$1000',date:"Jan 9 2018", balance:'Directpay Full Balance'},
-            {key:'024DDMB7500',name:'Misc Inflows',value:'$1000',date:"Jan 9 2018", balance:'Directpay Full Balance'},
+            {key:'024DDMB750',name:'Misc Inflows',value:'$1,000',date:"Jan 9 2018", balance:'Directpay Full Balance'},
+            {key:'024DDMB757',name:'Uncategorized',value:'$1,000',date:"Jan 9 2018", balance:'Directpay Full Balance'},
+            {key:'024DDMB7500',name:'Misc Inflows',value:'$1,000',date:"Jan 9 2018", balance:'Directpay Full Balance'},
         ]
     },
     
@@ -451,12 +471,12 @@ IncomeData = [
     {
         key:'6987',
         title:'Misc Inflow',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         items:[
-            {key:'024DDMB75000',name:'Directpay Full Balance',value:'$1000',date:"Jan 9 2018", institution:'Discover'},
-            {key:'024DDMB7570000',name:'Directpay Full Balance',value:'$1000',date:"Jan 9 2018", institution:'Discover'},
-            {key:'024DDMB75777',name:'Directpay Full Balance',value:'$1000',date:"Jan 9 2018", institution:'Discover'},
+            {key:'024DDMB75000',name:'Directpay Full Balance',value:'$1,000',date:"Jan 9 2018", institution:'Discover'},
+            {key:'024DDMB7570000',name:'Directpay Full Balance',value:'$1,000',date:"Jan 9 2018", institution:'Discover'},
+            {key:'024DDMB75777',name:'Directpay Full Balance',value:'$1,000',date:"Jan 9 2018", institution:'Discover'},
         ]
     },
     
@@ -466,12 +486,12 @@ ExpensesData = [
 {
     key:'6345',
     title:'Mortgages',
-    value:'$1000',
+    value:'$1,000',
     color:'#416ce1',
     items:[
-        {key:'024DDMB75000',name:'GEEFCU DES:MTG PYMT ID XXX',value:'$1000',date:"Jan 9 2018", institution:'Bank Of America'},
-        {key:'024DDMB7570000',name:'GEEFCU DES:MTG PYMT ID XXX',value:'$1000',date:"Jan 9 2018", institution:'Bank Of America'},
-        {key:'024DDMB75777',name:'GEEFCU DES:MTG PYMT ID XXX',value:'$1000',date:"Jan 9 2018", institution:'Bank Of America'},
+        {key:'024DDMB75000',name:'GEEFCU DES:MTG PYMT ID XXX',value:'$1,000',date:"Jan 9 2018", institution:'Bank Of America'},
+        {key:'024DDMB7570000',name:'GEEFCU DES:MTG PYMT ID XXX',value:'$1,000',date:"Jan 9 2018", institution:'Bank Of America'},
+        {key:'024DDMB75777',name:'GEEFCU DES:MTG PYMT ID XXX',value:'$1,000',date:"Jan 9 2018", institution:'Bank Of America'},
     ]
 }
 

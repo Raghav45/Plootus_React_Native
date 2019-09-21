@@ -16,9 +16,9 @@ const logo = (props)=>{
         color: "#094392",
         fontWeight: 'bold',
         fontSize: 28,
-        marginTop:20,
-        marginLeft: 40,
-        marginBottom:20
+        marginTop:'5%',
+        marginLeft: '10%',
+        marginBottom:'5%'
     };
 
     return(

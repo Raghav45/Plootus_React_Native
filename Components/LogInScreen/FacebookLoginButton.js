@@ -13,7 +13,8 @@ buttonStyle={
   shadowOpacity: 0.8,
   shadowRadius: 1,  
   elevation:5,
-  backgroundColor:"#2E9298"
+  backgroundColor:"#2E9298",
+  marginBottom:20
 }
 
 render(){

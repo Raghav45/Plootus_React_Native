@@ -1,21 +1,23 @@
 import React, {Component} from 'react';
-import { Button, WhiteSpace, WingBlank } from '@ant-design/react-native';
+import {WhiteSpace, WingBlank } from '@ant-design/react-native';
 import {StyleSheet} from 'react-native';
 import {withNavigation} from 'react-navigation';
+import { Button } from 'react-native-elements';
+
 
 const login_btn = (props)=>{
 
-    // const loginBtnStyles = {
-    //     backgroundColor:
-    // };
+    const loginBtnStyles = {
+        
+     };
 
     return(
         <WingBlank>
-            <Button type="primary"
-            onPress={() => props.navigation.navigate('Login')}>
-                Log In
-            </Button>
+            <Button title='Log In' titleStyle={{fontSize:20,fontFamily:'sans-serif'}}
+            onPress = {()=>props.navigation.navigate('Login')}/>
+                
             <WhiteSpace />
+            
         </WingBlank>
     );
 };

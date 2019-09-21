@@ -15,7 +15,7 @@ const login_btn = (props)=>{
             <Button type="primary"
             onPress={() => {
               
-                    props.navigation.navigate('Tabs');
+                    props.navigation.navigate('BeginnerTabs');
                
             }}>
                 Log In

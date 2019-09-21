@@ -18,7 +18,7 @@ class Accordion529 extends Component{
                                 <View style={{padding:16,flexDirection:'row',justifyContent:'space-between',paddingBottom:10,paddingTop:10}} >
                                     <View >
                                         <View style={{width:Dimensions.get('window').width-150,flexDirection:'row'}}>
-                                        <Text style={{color:this.props.color,fontSize:60,marginTop:-43,marginRight:5}}>.</Text>
+                                        <Text style={{color:this.props.color,fontSize:60,marginTop:-50,marginRight:5}}>.</Text>
                                         <Text style={{fontWeight:'bold'}}>{this.props.title}</Text>
                                         </View>
                                         <Text style={{color:'gray'}}>UN: {this.props.un}</Text>

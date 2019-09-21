@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import { Image, Text, StyleSheet,View,TouchableOpacity,Dimensions,ScrollView,Picker} from 'react-native'
-import {VictoryArea,VictoryChart,createContainer,VictoryTheme,VictoryBar } from 'victory-native';
-import {Defs,LinearGradient,Stop} from 'react-native-svg';
+import {Image,Text, StyleSheet,View,TouchableOpacity,Dimensions,ScrollView,Picker} from 'react-native'
+import {VictoryArea,VictoryChart,createContainer } from 'victory-native';
 import {MaterialIcons} from '@expo/vector-icons'
 import {Icon,Input,Button,Overlay} from 'react-native-elements';
-import Slider from '../common/Slider';
+import {RegularSlider,CashSlider,PercentSlider} from '../common/Slider';
 import {HeadingRowComponent, RowComponent} from "../common/FutureExpenseRow";
 import { FlatList } from 'react-native-gesture-handler';
-
-const VictoryZoomVoronoiContainer = createContainer( "cursor","voronoi");
+import BeforeRetirementChart from '../common/BeforeRetirementChart';
+import AfterRetirementChart from '../common/AfterRetirementChart';
+import FutureExpenseChart from '../common/FutureExpenseChart';
+const sWidth = Dimensions.get('window').width
 data = [
     {key:'1',x:25,y:100,},
     {key:'2',x:30,y:210,},
@@ -34,13 +35,12 @@ export default class RetirementPlannerScreen extends Component {
             flex:1,fontSize: 18,
             color: '#404a57'
            },
-
            tabBarIcon: ({tintColor}) => (
             <Image
                 source={require("../../assets/retirementIcon.png")}
-                style={{ width: 26, height: 26, tintColor:tintColor}}
-              />
-        ),
+                style={{ width: 37, height: 37, tintColor:tintColor}}
+                />
+            ),
     }
     state = {
         edit:false,
@@ -63,7 +63,7 @@ export default class RetirementPlannerScreen extends Component {
         annualContribution:5,
         annualRetirementExpenses:50,
         investmentStrategy:'conservative',
-        b1C:'#5c5eb9',
+        b1C:'#416ce1',
         b2C:'white',
         b3C:'white',
         b4C:'white',
@@ -135,83 +135,72 @@ export default class RetirementPlannerScreen extends Component {
       annualRetirementExpensesChanger = (annualRetirementExpenses)=>{
         this.setState({annualRetirementExpenses})
       }
-      modalView = ()=>{
+      modalView=()=>{
         return(
-        <View style={{ flex: 1}}>
-          <View style={{flexDirection:'row',justifyContent:'flex-end',marginBottom:5,marginRight:5}}>
-            <Text style = {{fontSize:23,color:'#2b2d38',marginTop:5,marginRight:4}}>Starting Balance</Text>
-            <View style = {{flexDirection:'row',borderRadius:5,borderWidth:1,borderColor:'#a7a7ab',height:40,width:180}}>
-            <View style = {{backgroundColor:'#5c5eb9',width:40}}>
-            <Icon 
-             type='font-awesome'
-             name='dollar' 
-             color='white' 
-             size={25} 
-             containerStyle={{marginTop:6}}
-             />
+        <View style={{ flex: 1,marginBottom:10,marginTop:15,marginLeft:2,marginRight:2}}>
+          {/* <View style={{backgroundColor:'rgba(255,255,255,.5)',alignItems:'flex-end',marginTop:-4,marginBottom:2}}>
+          <Icon
+          type='material'
+          name='close'
+          size={30}
+          onPress={()=>{this.setState({isVisible:false})}}
+          />
+            </View>
+          */}
+          <View style={{flexDirection:'row',justifyContent:'space-evenly',marginBottom:5,marginRight:5,marginTop:10}}>
+            <Text style = {{fontSize:18,paddingLeft:6,color:'#2b2d38',marginTop:5,marginRight:8}}>Starting Balance:</Text>
+            <View style = {{flexDirection:'row',borderRadius:5,borderWidth:1,borderColor:'#a7a7ab',height:40,width:155}}>
+            <View style = {{backgroundColor:'#416ce1',width:40,alignItems:'center',justifyContent:'center'}}>
+            <Text style={{fontSize:18,color:'white'}}>$</Text>
             </View>
             <Input
-              placeholder="Input"
-              containerStyle={{width:125,borderLeftWidth:1,borderColor:'#a7a7ab'}}
+              inputStyle={{fontSize:18}}
+              placeholder="Enter"
+              containerStyle={{width:115,borderLeftWidth:1,borderColor:'#a7a7ab'}}
               inputContainerStyle={{borderBottomWidth: 0}}
               keyboardType='number-pad'
             />
             </View>
           </View>
-          <Slider changeState = {this.currentAgeChanger} sliderValue = {this.state.currentAge} type='Current Age(Years)'/>
-          <Slider changeState = {this.retirementAgeChanger} sliderValue = {this.state.retirementAge} type='Retirement Age(Years)'/>
-          <Slider changeState = {this.lifeExpectancyChanger} sliderValue = {this.state.lifeExpectency} type='Life Expectancy(Years)'/>
-          <Slider changeState = {this.annualContributionChanger} sliderValue = {this.state.annualContribution} type='Annual Contribution($)'/>
-          <Slider changeState = {this.annualRetirementExpensesChanger} sliderValue = {this.state.annualRetirementExpenses} type='Annual Retirement Expenses($)'/>
-          <Text style = {{fontSize:18,fontWeight:'500',color:'#2b2d38'}}>Investment Strategy</Text>
-          <View style={{flexDirection:'row',justifyContent:'space-evenly'}}>
+          
+          <RegularSlider changeState = {this.currentAgeChanger} sliderValue = {this.state.currentAge} type='Current Age (Years)'/>
+          <RegularSlider changeState = {this.retirementAgeChanger} sliderValue = {this.state.retirementAge} type='Retirement Age (Years)'/>
+          <RegularSlider changeState = {this.lifeExpectancyChanger} sliderValue = {this.state.lifeExpectency} type='Life Expectancy (Years)'/>
+          <CashSlider changeState = {this.annualContributionChanger} sliderValue = {this.state.annualContribution} type='Annual Contribution ($)'/>
+          <CashSlider changeState = {this.annualRetirementExpensesChanger} sliderValue = {this.state.annualRetirementExpenses} type='Annual Retirement Expenses ($)'/>
+          <Text style = {{fontSize:18,color:'#2b2d38',marginLeft:12,marginBottom:10}}>Investment Strategy:</Text>
+          <View style={{flexDirection:'row',justifyContent:'space-evenly',paddingBottom:10}}>
           <Button
             title="Conservative"
             type="outline"
             buttonStyle={{backgroundColor:this.state.b1C,height:30,borderColor:'#777676'}}
-            titleStyle={{color:this.state.b1C==='#5c5eb9'?'white':'black'}}
-            containerStyle={{width:100,}}
-            onPress={()=>{this.setState({ b1C:'#5c5eb9',b2C:'white',b3C:'white',b4C:'white'})}}
+            titleStyle={{fontSize:13,fontWeight:'100',color:this.state.b1C==='#416ce1'?'white':'black'}}
+            containerStyle={{width:94,}}
+            onPress={()=>{this.setState({ b1C:'#416ce1',b2C:'white',b3C:'white',b4C:'white'})}}
           />
           <Button
             title="Moderate"
             type="outline"
             buttonStyle={{backgroundColor:this.state.b2C,height:30,borderColor:'#777676'}}
-            containerStyle={{width:80}}
-            titleStyle={{color:this.state.b2C==='#5c5eb9'?'white':'black'}}
-            onPress={()=>{this.setState({ b2C:'#5c5eb9',b1C:'white',b3C:'white',b4C:'white'})}}
+            containerStyle={{width:75}}
+            titleStyle={{fontSize:13,color:this.state.b2C==='#416ce1'?'white':'black'}}
+            onPress={()=>{this.setState({ b2C:'#416ce1',b1C:'white',b3C:'white',b4C:'white'})}}
           />
           <Button
             title="Growth"
             type="outline"
             buttonStyle={{height:30,backgroundColor:this.state.b3C,borderColor:'#777676'}}
-            containerStyle={{width:70}}
-            titleStyle={{color:this.state.b3C==='#5c5eb9'?'white':'black'}}
-            onPress={()=>{this.setState({ b3C:'#5c5eb9',b2C:'white',b1C:'white',b4C:'white'})}}
+            containerStyle={{width:65}}
+            titleStyle={{fontSize:13,color:this.state.b3C==='#416ce1'?'white':'black'}}
+            onPress={()=>{this.setState({ b3C:'#416ce1',b2C:'white',b1C:'white',b4C:'white'})}}
           />
           <Button
-            title="Super"
+            title="S. Growth"
             type="outline"
             buttonStyle={{height:30,backgroundColor:this.state.b4C,borderColor:'#777676'}}
-            containerStyle={{width:70}}
-            titleStyle={{color:this.state.b4C==='#5c5eb9'?'white':'black'}}
-            onPress={()=>{this.setState({ b4C:'#5c5eb9',b2C:'white',b3C:'white',b1C:'white'})}}
-          />
-          </View>
-          <View style={{flexDirection:'row',marginTop:5,justifyContent:'center',borderTopColor:'#a7a7ab',borderTopWidth:1}}>
-          <Button
-            title="Submit"
-            type="outline"
-            buttonStyle={{height:30}}
-            containerStyle={{width:100,marginTop:5}}
-            onPress={()=>{this.setState({isVisible:false})}}
-          />
-           <Button
-            title="Close"
-            type="outline"
-            buttonStyle={{height:30}}
-            containerStyle={{width:100,marginTop:5,marginLeft:30}}
-            onPress={()=>{this.setState({isVisible:false})}}
+            containerStyle={{width:75}}
+            titleStyle={{fontSize:13,color:this.state.b4C==='#416ce1'?'white':'black'}}
+            onPress={()=>{this.setState({ b4C:'#416ce1',b2C:'white',b3C:'white',b1C:'white'})}}
           />
           </View>
         </View>
@@ -219,79 +208,41 @@ export default class RetirementPlannerScreen extends Component {
       }
 
       modalView2 = () =>{
-        // const items = [];
-        
-        // for (item of dataSource) {
-        //     items.push(
-        //       <RowComponent data = {item}/>
-        //     );
-        // }
-        // return items;
           return(
-              <View style = {{flex:1}}>
-                    <View >
-                    <Slider changeState = {this.inflationChanger} sliderValue = {this.state.inflation} type='Inflation'/>
-                     </View>
-                    
-                     {/* <HeadingRowComponent/>
-                   */}
-                    
-                    <ScrollView contentContainerStyle={{height:300}}>
+              <View style = {styles.modalContainer}>
+                    <PercentSlider changeState = {this.inflationChanger} sliderValue = {this.state.inflation} type='Inflation'/>
+                     <HeadingRowComponent/>
+                    <View style = {{height:290}}>
+                    {/* <ScrollView> */}
                        <FlatList
                        data = {dataSource}
                        numColumns={1}
                        renderItem = {({item,key})=>(
                        <View>
-                           <RowComponent data = {item}/>
+                           <RowComponent data = {item} />
                        </View>
                        )}
                        />
-                    </ScrollView>
+                    {/* </ScrollView> */}
+                    </View>
+                    
+                    {/* <View style={{flexDirection:'row',borderTopWidth:0.5,borderTopColor:'#a7a7ab'}}>
+                        <TouchableOpacity style={styles.modalActionButton} onPress={()=>this.modalAction2(false)}>
+                            <Text style={[styles.modalActionButtonText,{color:'#416ce1'}]}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.modalActionButton,{backgroundColor:'#416ce1'}]} onPress={()=>this.modalAction2(false)}>
+                            <Text style ={styles.modalActionButtonText}>Apply</Text>
+                        </TouchableOpacity>
+                    </View> */}
               </View>
           );
       }
       
    beforeRetirement = () =>{
        return(
-        <View style={{padding:10,paddingTop:0,marginTop:-20}}>
-        <VictoryChart
-            // domain={{ x: [25,55] }}
-            theme={VictoryTheme.material}
-            height={300}
-            width={350}
-            containerComponent={
-                <VictoryZoomVoronoiContainer
-                // cursorDimension="x"
-                cursorLabelOffset={{ x: 5, y: -10 }}
-                    labels={(d) => `${d.x}, ${d.y}`}
-                />
-                }
-        >
-            <Defs>
-            <LinearGradient id="gradientStroke"
-            x1="0%"
-            x2="0%"
-            y1="0%"
-            y2="100%"
-            >
-            <Stop offset="10%" stopColor="#008aefcb" stopOpacity="1" />
-            <Stop offset="100%" stopColor="#52da9c" stopOpacity="0" />
-            </LinearGradient>
-            </Defs>
-
-            <VictoryArea
-            data={data}
-            interpolation="natural"
-            style={{
-            data: {
-                fill: 'url(#gradientStroke)',
-                stroke: '#1E93FA',
-                strokeWidth: 2
-            }
-            }}
-            />
-        </VictoryChart>
-        <View style={styles.row}>
+        <ScrollView style={{padding:15,paddingTop:0,marginTop:-1}} >
+       <BeforeRetirementChart/>
+        {/* <View style={styles.row}>
             <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                 <Text style={{color:'#416ce1',fontSize:60,marginTop:-35,marginRight:5}}>.</Text>
                 <Text style={{fontSize:18,fontWeight:'600',color:'#404a57'}}>Retirement Assets</Text>
@@ -304,92 +255,22 @@ export default class RetirementPlannerScreen extends Component {
                     style={{color:'white',marginRight:-8}}
                 />
             </TouchableOpacity>                
-        </View>
-        <View>
-            <View style = {[styles.currentPlanHeader,{borderTopColor:'#b3b3b3',backgroundColor:'#b8b8b8',borderTopWidth:1,marginTop:3}]}>
-                <Text style = {styles.currentPlanText}>Current Plan</Text>
-            </View>
-           <View style = {styles.currentPlanHeader}>
-               <Text style = {styles.currentPlanText}>Current Age</Text>
-               <Text style = {styles.currentPlanText}>{this.state.currentAge}</Text>
-           </View>
-           <View style = {styles.currentPlanHeader}>
-               <Text style = {styles.currentPlanText}>Retirement Year</Text>
-               <Text style = {styles.currentPlanText}>{this.state.retirementAge}</Text>
-           </View>
-           <View style = {styles.currentPlanHeader}>
-               <Text style = {styles.currentPlanText}>Life Expectency</Text>
-               <Text style = {styles.currentPlanText}>{this.state.lifeExpectency}</Text>
-           </View>
-           <View style = {styles.currentPlanHeader}>
-               <Text style = {styles.currentPlanText}>Annual Contribution</Text>
-               <Text style = {styles.currentPlanText}>{this.state.annualContribution}</Text>
-           </View>
-           <View style = {styles.currentPlanHeader}>
-               <Text style = {styles.currentPlanText}>Annual Retirement Expenses</Text>
-               <Text style = {styles.currentPlanText}>{this.state.annualRetirementExpenses}</Text>
-           </View>
-           <View style = {styles.currentPlanHeader}>
-               <Text style = {styles.currentPlanText}>Investment Strategy</Text>
-               <Text style = {styles.currentPlanText}>{this.state.investmentStrategy}</Text>
-           </View>
-        </View>                
-    </View>           
+        </View> */}
+        
+        
+        {this.modalView()}              
+    </ScrollView>           
        );
    }
    afterRetirement = () =>{
         return(
-           <ScrollView>
-               <VictoryChart
-                    // domain={{ x: [25,55] }}
-                    theme={VictoryTheme.material}
-                    height={300}
-                    width={350}
-                    containerComponent={
-                        <VictoryZoomVoronoiContainer
-                        // cursorDimension="x"
-                        cursorLabelOffset={{ x: 5, y: -10 }}
-                            labels={(d) => `${d.x}, ${d.y}`}
-                        />
-                        }
-                >
-                    <Defs>
-                    <LinearGradient id="gradientStroke"
-                    x1="0%"
-                    x2="0%"
-                    y1="0%"
-                    y2="100%"
-                    >
-                    <Stop offset="10%" stopColor="#008aefcb" stopOpacity="1" />
-                    <Stop offset="100%" stopColor="#52da9c" stopOpacity="0" />
-                    </LinearGradient>
-                    </Defs>
+           <ScrollView style={{padding:15,paddingTop:0,marginTop:-1}}>
 
-                    <VictoryArea
-                    data={data}
-                    interpolation="natural"
-                    style={{
-                    data: {
-                        fill: 'url(#gradientStroke)',
-                        stroke: '#1E93FA',
-                        strokeWidth: 2
-                    }
-                    }}
-                    />
-                </VictoryChart>
-               <View pointerEvents="none" style = {{marginTop:-60}}>
-                    <VictoryChart  theme={VictoryTheme.material} domainPadding={10}
-                    height={300}
-                    width={350}
-                    >
-                        <VictoryBar
-                            standalone={false}
-                            style={{ data: { fill: "#416ce1" } }}
-                            data={sampleData}
-                        />
-                    </VictoryChart>
-                </View>
-                <View style={[styles.row,{marginBottom:5}]}>
+                <AfterRetirementChart/>
+
+                <FutureExpenseChart/>
+
+                {/* <View style={[styles.row,{marginBottom:5}]}>
                     <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                         <Text style={{color:'#416ce1',fontSize:60,marginTop:-35,marginRight:5}}>.</Text>
                         <Text style={{fontSize:18,fontWeight:'600',color:'#404a57'}}>Future Expenses</Text>
@@ -404,30 +285,20 @@ export default class RetirementPlannerScreen extends Component {
                         />
                     </TouchableOpacity>
                                    
-                </View>
-                <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center',marginLeft:20}}>
+                </View> */}
+                {/* <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center',marginLeft:20}}>
                         <Text style={{color:'green',fontSize:60,marginTop:-35,marginRight:5}}>.</Text>
                         <Text style={{fontSize:18,fontWeight:'600',color:'#404a57'}}>Retirement Assets</Text>
-                </View>
+                </View> */}
+                {this.modalView()}
             </ScrollView>
         );
     }
     futureExpenses = () =>{
         return(
-        <View>
-           <View pointerEvents="none" style = {{marginTop:-10}}>
-                <VictoryChart  theme={VictoryTheme.material} domainPadding={10}
-                height={300}
-                width={350}
-                >
-                    <VictoryBar
-                        standalone={false}
-                        style={{ data: { fill: "#416ce1" } }}
-                        data={sampleData}
-                    />
-                </VictoryChart>
-            </View>
-            <View style={[styles.row,{marginBottom:5}]}>
+        <ScrollView style={{padding:10,paddingTop:0}}>
+           <FutureExpenseChart/>
+            {/* <View style={[styles.row,{marginBottom:5}]}>
                 <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                     <Text style={{color:'#416ce1',fontSize:60,marginTop:-35,marginRight:5}}>.</Text>
                     <Text style={{fontSize:18,fontWeight:'600',color:'#404a57'}}>Future Expenses</Text>
@@ -441,9 +312,12 @@ export default class RetirementPlannerScreen extends Component {
                         style={{color:'white',marginRight:-8}}
                     />
                 </TouchableOpacity>    
-            </View>
+            </View> */}
+
+           
+
             <View style={{flexDirection:'row',justifyContent:'space-evenly',alignItems:'center',margin:20}}>
-                <Text style={{fontSize:18,fontWeight:'600',color:'#404a57'}}>Your Total Expenses</Text>
+                <Text style={{fontSize:16,fontWeight:'400',color:'#404a57',marginLeft:-12}}>Total Expenses</Text>
                 <View style={styles.pickerWrapper}>
                 <MaterialIcons name='keyboard-arrow-down'size={30} style={styles.pickerIcon}/>
                 <Picker
@@ -457,10 +331,10 @@ export default class RetirementPlannerScreen extends Component {
                     <Picker.Item label="2020" value="last_month" />
                     <Picker.Item label="2021" value="this_year" />
                     <Picker.Item label="2022" value="last_year" />
-                    <Picker.Item label="2023" value="Custom" />
+                    <Picker.Item label="2023" value="custom" />
                 </Picker>
                 </View>
-                <Text style={{fontSize:18,fontWeight:'600',color:'#404a57'}}> to</Text>
+                <Text style={{fontSize:16,fontWeight:'400',color:'#404a57'}}> to</Text>
                 <View style={styles.pickerWrapper}>
                 <MaterialIcons name='keyboard-arrow-down'size={30} style={styles.pickerIcon}/>
                 <Picker
@@ -474,11 +348,12 @@ export default class RetirementPlannerScreen extends Component {
                     <Picker.Item label="2071" value="last_month" />
                     <Picker.Item label="2072" value="this_year" />
                     <Picker.Item label="2073" value="last_year" />
-                    <Picker.Item label="2074" value="Custom" />
+                    <Picker.Item label="2074" value="custom" />
                 </Picker>
                 </View>
-            </View>     
-        </View>
+            </View> 
+            {this.modalView2()}    
+        </ScrollView>
         );
     }
     render() {
@@ -516,11 +391,10 @@ export default class RetirementPlannerScreen extends Component {
                 </View>
                
                 {this.state.type =='br'?this.beforeRetirement(): this.state.type == 'ar'?this.afterRetirement():this.futureExpenses()}
-                
-                <Overlay
+   
+                {/* <Overlay
                     isVisible={this.state.isVisible}
                     windowBackgroundColor="rgba(255, 255, 255, .5)"
-                    children={ <Text>hello</Text> }
                     width='100%'
                     height={430}
                     onBackdropPress={() => this.modalAction(false)}
@@ -528,25 +402,29 @@ export default class RetirementPlannerScreen extends Component {
                     overlayStyle={{bottom:0,position: 'absolute'}}
                     animationType='fade'
                   >
-                    { this.state.isVisible?this.modalView():null }  
+
+                    <View style={styles.modalContainer}>
+                    { this.state.isVisible?this.modalView():null } 
+                    </View>
                         
                   </Overlay>
                   <Overlay
                     isVisible={this.state.isVisible2}
                     windowBackgroundColor="rgba(255, 255, 255, .5)"
-                    children={ <Text>hello</Text> }
                     width='100%'
-                    height={400}
+                    height={450}
                     onBackdropPress={() => this.modalAction2(false)}
                     onDismiss={()=>this.modalAction2(false)}
                     overlayStyle={{bottom:0,position: 'absolute'}}
                     animationType='fade'
                   >
                    
-                    { this.state.isVisible2?this.modalView2():null }  
+                    <View style={styles.modalContainer}>
+                    { this.state.isVisible2?this.modalView2():null } 
+                    </View>
                    
                      
-                  </Overlay>
+                  </Overlay> */}
                  
             </View>
         )
@@ -585,7 +463,7 @@ const styles = StyleSheet.create({
     },
     editButtonStyle:{
         borderRadius:10,flexDirection:'row',alignItems:'center',justifyContent:'center',
-        backgroundColor:'#416ce1',width:80,height:35,padding:20
+        backgroundColor:'#416ce1',width:80,height:30,padding:20
     },
     currentPlanHeader:{
         flexDirection:'row',
@@ -608,7 +486,7 @@ const styles = StyleSheet.create({
      pickerIcon: {
         color: '#ffffff',
         position: "absolute",
-        bottom: 11,
+        bottom: 8,
         right: 10,
         fontSize: 20
      },
@@ -618,13 +496,23 @@ const styles = StyleSheet.create({
         backgroundColor: "transparent",
         height: 35, width:70,
      },
-
+     modalActionButton:{
+        width:sWidth/2,justifyContent:'center',alignItems:'center',height:40,
+     },
+     modalActionButtonText:{
+        color:'#ffffff',fontSize:18,fontWeight:'600'
+     },
+     modalContainer:{
+         flex:1,
+        marginBottom:10,
+        marginTop:15
+     }
 })
 mydata2=[
     {
         key:'1',
         title:'Bank of America',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8345376454894',
         type:'REGULAR CHECKING'
@@ -632,7 +520,7 @@ mydata2=[
     {
         key:'2',
         title:'Bank of America',
-        value:'$1000',
+        value:'$1,000',
         color:'green',
         accno:'8945648757495',
         type:'9 MO RISK FREE CD'
@@ -640,7 +528,7 @@ mydata2=[
     {
         key:'3',
         title:'Bank of America',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8945648757495',
         type:'9 MO RISK FREE CD'
@@ -648,7 +536,7 @@ mydata2=[
     {
         key:'4',
         title:'Bank of America',
-        value:'$1000',
+        value:'$1,000',
         color:'green',
         accno:'8945648757495',
         type:'9 MO RISK FREE CD'
@@ -656,7 +544,7 @@ mydata2=[
     {
         key:'5',
         title:'Bank of America',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8945648757495',
         type:'9 MO RISK FREE CD'
@@ -666,7 +554,7 @@ mydata2=[
 dataSource= [
             {
                 key:'0',
-                category:'Account fees',
+                category:"Credit Card Expenses",
                 current:0,
                 futureWI:-140,
                 futureI:-300

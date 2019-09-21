@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 import {View,StyleSheet,ScrollView,TouchableOpacity,Text,Dimensions} from 'react-native'
-import {VictoryPie ,VictoryTheme} from 'victory-native'
 import RealEstateAccordion from './RealEstateAccordion';
 import {MaterialIcons,AntDesign} from '@expo/vector-icons'
+import PieChart from '../../common/PieChart'
+
+var realstate_data = [	
+    { x: "Land A", y: 75 ,r:120,ir:90},		
+    { x: "Land B", y: 140 ,r:120,ir:90},		
+    { x: "Land C", y: 65 ,r:120,ir:90},		
+    { x: "Land D", y: 25 ,r:120,ir:90}		
+    ]
 
 export default class RealEstateScreen extends Component {
     static navigationOptions = ({navigation,state }) => {
@@ -67,29 +74,14 @@ export default class RealEstateScreen extends Component {
         return (
             <View style = {styles.container}>
                  <View>
-                    <VictoryPie
-                        height={280}
-                        colorScale={[ "#416ce1",'green' ]}
-                        data={[
-                            { x: "Cats", y: 35 },
-                            { x: "Dogs", y: 40 },
-                            { x: "Birds", y: 155 }
-                            ]}
-                        innerRadius={90}
-                        radius={120}
-                        theme={VictoryTheme.material}
-                        labels={(d) => `${d.y}`}
-                        labelPosition="centroid"
-                        labelRadius={100}
-                        style={{ labels: { fill: "white", fontSize: 10, fontWeight: "bold" } }}
-                    />
+                    <PieChart data={realstate_data}/>	
                 </View>
                 <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
                     <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                         <Text style={[styles.title]}>Total</Text>
                     </View>
                     <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text style={{fontSize:18,fontWeight:'600',color:'#1e2133',marginRight:10}}>$10000</Text>
+                        <Text style={{fontSize:18,fontWeight:'600',color:'#1e2133',marginRight:10}}>$10,000</Text>
                         <MaterialIcons name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
                     </View>                
                 </TouchableOpacity>
@@ -133,7 +125,7 @@ const styles = StyleSheet.create({
     {
         key:'1',
         title:'Bank of America',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         accno:'8345376454894',
         type:'REGULAR CHECKING',
@@ -142,7 +134,7 @@ const styles = StyleSheet.create({
     {
         key:'2',
         title:'Bank of America',
-        value:'$1000',
+        value:'$1,000',
         color:'green',
         accno:'8945648757495',
         type:'9 MO RISK FREE CD',

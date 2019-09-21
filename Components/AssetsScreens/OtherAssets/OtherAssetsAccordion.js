@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
-import {View,StyleSheet,TouchableOpacity,FlatList,Text,Dimensions} from 'react-native';
+import {View,StyleSheet,TouchableOpacity,FlatList,TouchableWithoutFeedback,Text,Dimensions} from 'react-native';
 import {MaterialIcons} from '@expo/vector-icons'
 
 export default class OtherAssetsAccordion extends Component{
+   
+   
     state={
         data:this.props.data,
-        expanded:true
+        expanded:true,
+       
     }
     toggleExpand=()=>{
         this.setState({expanded : !this.state.expanded})
@@ -13,14 +16,16 @@ export default class OtherAssetsAccordion extends Component{
     render(){
         return(
             <View>
-            <TouchableOpacity style={styles.row} onPress={()=>this.toggleExpand()}>
+            <TouchableOpacity style={Object.assign({backgroundColor:(this.props.index===this.props.delItemIndex)?'#c2bfb6':'white'},styles.row)} onPress={()=>{this.props.updateSelection(this.props.index);console.log(this.state.itemColor)}}>
                 <View style={{width:Dimensions.get('window').width-150,flexDirection:'row',alignItems:'center'}}>
                     <Text style={{color:this.props.color,fontSize:60,marginTop:-33,marginRight:5}}>.</Text>
                     <Text style={[styles.title]}>{this.props.title}</Text>
                 </View>
                 <View style={{flexDirection:'row',alignItems:'center'}}>
                     <Text style={{fontSize:16,color:'green',marginRight:10}}>{this.props.value}</Text>
-                    <MaterialIcons name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
+                    <TouchableWithoutFeedback onPress={()=>this.toggleExpand()}>
+                        <MaterialIcons name={this.state.expanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} size={30} />
+                    </TouchableWithoutFeedback>
                 </View>                
             </TouchableOpacity>
             <View style={styles.parentHr}/>
@@ -55,7 +60,7 @@ const styles = StyleSheet.create({
     title:{
         fontSize: 14,
         fontWeight:'bold',
-        color: '#1e2133',
+        color: '#1e2133'
     },
     row:{
         flex:1,
@@ -65,7 +70,6 @@ const styles = StyleSheet.create({
         paddingLeft:15,
         paddingRight:10,
         alignItems:'center',
-        backgroundColor: '#ffffff',
         borderBottomColor:'#c6cbde',
         borderBottomWidth: 1,
         width:'100%'

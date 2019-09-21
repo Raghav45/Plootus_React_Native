@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {View, Image, ScrollView, StyleSheet, Text} from 'react-native';
 import {withNavigation} from 'react-navigation';
 import { TextField } from 'react-native-material-textfield';
-import { Button, WhiteSpace, WingBlank } from '@ant-design/react-native';
+import {WhiteSpace, WingBlank } from '@ant-design/react-native';
+import { Button } from 'react-native-elements';
 import StepIndicatorBar from './StepIndicatorBar';
 
 
@@ -39,9 +40,8 @@ class EnterPasswordScreen extends Component{
                 label="Set your passcode"
                 />
 
-                <Button style={styles.buttonStyle}
-                type= "primary"
-                onPress = {()=>this.props.navigation.navigate('Tabs')}>Next</Button>
+<Button title='Next' titleStyle={{fontSize:20}}buttonStyle={styles.buttonStyle} 
+            onPress = {()=>this.props.navigation.navigate('Tabs')}/>
             
             </View>
         );}
@@ -51,6 +51,15 @@ class EnterPasswordScreen extends Component{
 export default withNavigation(EnterPasswordScreen);
 
 const styles = StyleSheet.create({
+    
+    buttonStyle: {
+        backgroundColor: "#416ce1",
+        borderColor: "#416ce1",
+        margin:20
+      
+    },
+    
+    
     dropdownContainer: {
         marginLeft:20,
         marginRight:20
@@ -105,9 +114,5 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         
     },
-    buttonStyle:{
-        //marginTop:60,
-        margin:20,
-
-    }
+  
   });

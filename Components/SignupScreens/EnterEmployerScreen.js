@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {View, Image,TextInput, ScrollView, StyleSheet,KeyboardAvoidingView, Text} from 'react-native';
 import {withNavigation} from 'react-navigation';
-import { Button, WhiteSpace, WingBlank} from '@ant-design/react-native';
+import {WhiteSpace, WingBlank} from '@ant-design/react-native';
 import { Searchbar } from 'react-native-paper';
 import StepIndicatorBar from './StepIndicatorBar';
+import { Button } from 'react-native-elements';
 
 
 const pic = require('../../assets/artboard-4.png')
@@ -35,10 +36,8 @@ class EnterEmployerScreen extends Component{
                 </View>
 
                 <WingBlank>
-                <Button style={styles.buttonStyle}
-                    
-                    type= "primary"
-                    onPress = {()=>this.props.navigation.navigate('Strategy')}>Next</Button>
+                <Button title='Next' titleStyle={{fontSize:20}} buttonStyle={styles.buttonStyle}
+            onPress = {()=>this.props.navigation.navigate('Strategy')}/>
                 </WingBlank>
                 
             
@@ -49,6 +48,13 @@ class EnterEmployerScreen extends Component{
 
 
 const styles = StyleSheet.create({
+
+    buttonStyle: {
+        backgroundColor: "#416ce1",
+        borderColor: "#416ce1",
+        
+      
+    },
     imageStyle: {
       
       flex:1,

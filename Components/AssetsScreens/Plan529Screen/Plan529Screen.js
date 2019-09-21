@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import {View,StyleSheet,ScrollView,Text,TouchableOpacity} from 'react-native'
-import {VictoryPie ,VictoryTheme} from 'victory-native'
+import {View,StyleSheet,ScrollView,Text,TouchableOpacity} from 'react-native';
 import Accordion529 from './Accordion529';
+import PieChart from '../../common/PieChart';	
 
 mydata8=[
     {
         key:'123478',
         title:'***RSP',
-        value:'$1000',
+        value:'$1,000',
         color:'#416ce1',
         un:'0027DDCC/11',
         
@@ -15,7 +15,7 @@ mydata8=[
     {
         key:'2345656',
         title:'***PLAN',
-        value:'$1000',
+        value:'$1,000',
         color:'green',
         un:'0027DDCC/11',
        
@@ -23,6 +23,13 @@ mydata8=[
     
 
 ]
+
+var plan529_data = [		
+    { x: "Plan A", y: 75 ,r:120,ir:90},		
+    { x: "Plan B", y: 140 ,r:120,ir:90},		
+    { x: "Plan C", y: 65 ,r:120,ir:90},		
+    { x: "Plan D", y: 25 ,r:120,ir:90}		
+    ]
 
 export default class Plan529Screen extends Component{
 
@@ -35,7 +42,7 @@ export default class Plan529Screen extends Component{
     }
     static navigationOptions = ({navigation,state }) => {
         return{
-        headerTitle:'Plan529',
+        headerTitle:'529 Plan',
         headerStyle: {
             backgroundColor: '#f8f8f8',
             height: 60,
@@ -73,22 +80,7 @@ export default class Plan529Screen extends Component{
         return(
             <View style = {styles.container}>
                  <View>
-                    <VictoryPie
-                        height={280}
-                        colorScale={[ "#416ce1",'green' ]}
-                        data={[
-                            { x: "Cats", y: 35 },
-                            { x: "Dogs", y: 40 },
-                            { x: "Birds", y: 155 }
-                            ]}
-                        innerRadius={90}
-                        radius={120}
-                        theme={VictoryTheme.material}
-                        labels={(d) => `${d.y}`}
-                        labelPosition="centroid"
-                        labelRadius={100}
-                        style={{ labels: { fill: "white", fontSize: 10, fontWeight: "bold" } }}
-                    />
+                    <PieChart data = {plan529_data}/>	
                 </View>
                 <View style = {styles.totalTextStyle}>
                     <Text style = {{color:'#1e2133',fontSize:16,fontWeight:'300'}}>Total</Text>

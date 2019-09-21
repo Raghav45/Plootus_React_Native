@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {View, Image, ScrollView, StyleSheet, Text} from 'react-native';
 import {withNavigation} from 'react-navigation';
 import { TextField } from 'react-native-material-textfield';
-import { Button, WhiteSpace, WingBlank } from '@ant-design/react-native';
+import {WhiteSpace, WingBlank } from '@ant-design/react-native';
+import { Button } from 'react-native-elements';
 import StepIndicatorBar from './StepIndicatorBar';
 
 
@@ -38,10 +39,8 @@ class EnterZipcodeScreen extends Component{
                     </View>
             
                 <WingBlank>
-                <Button style={styles.buttonStyle}
-                    
-                    type= "primary"
-                    onPress = {()=>this.props.navigation.navigate('Employer')}>Next</Button>
+                <Button title='Next' titleStyle={{fontSize:20}}buttonStyle={styles.buttonStyle} 
+            onPress = {()=>this.props.navigation.navigate('Employer')}/>
                 </WingBlank>
                 
             </View>
@@ -54,6 +53,15 @@ class EnterZipcodeScreen extends Component{
 }
 
         const styles = StyleSheet.create({
+            
+            
+            buttonStyle: {
+                backgroundColor: "#416ce1",
+                borderColor: "#416ce1",
+                marginBottom:30
+              
+            },
+            
             imageStyle: {
               
               flex:1,
@@ -97,9 +105,7 @@ class EnterZipcodeScreen extends Component{
                 alignContent: 'center',
                
             },
-            buttonStyle:{
-                marginBottom: 30,
-            }
+           
           });
 
 export default withNavigation(EnterZipcodeScreen);

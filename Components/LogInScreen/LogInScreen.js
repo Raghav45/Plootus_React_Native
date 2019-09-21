@@ -117,6 +117,8 @@ class login extends Component {
                     <GoogleSignInButton/>
                     <Text/>
                     <FacebookLoginButton/>
+                    <Text/>
+                    
                 </View>
 
                 <Text style={this.bottomTextStyle}>First time here ? <Text style={{color: '#34d86a', fontWeight: 'bold'}}>Join Now</Text></Text>

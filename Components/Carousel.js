@@ -47,8 +47,8 @@ export default HomeScreenCarousel;
 const styles = StyleSheet.create({
   container: {
     height: 300,
-    marginBottom: 30,
-    marginTop: 10,
+    marginBottom: '1%',
+    marginTop: '5%',
     
   },
   wrapper: {

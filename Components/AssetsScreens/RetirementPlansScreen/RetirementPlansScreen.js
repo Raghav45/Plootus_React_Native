@@ -1,29 +1,36 @@
 import React, { Component } from 'react'
 import {View,StyleSheet,ScrollView,Text,TouchableOpacity} from 'react-native'
-import {VictoryPie ,VictoryTheme} from 'victory-native'
 import RetirementPlansAccordion from './RetirementPlansAccordion';
+import PieChart from '../../common/PieChart';	
 
 mydata=[
     {
         key:'1',
-        title:'Gold',
-        value:'$1000',
+        title:'Plan 1',
+        value:'$1,000',
         color:'#416ce1',
         items:[
-            {key:'024DDMB754',name:'International Equity Index',value:'$1000'}
+            {key:'024DDMB754',name:'International Equity Index',value:'$1,000'}
         ]
     },
     {
         key:'2',
-        title:'Silver',
-        value:'$1000',
+        title:'Plan 2',
+        value:'$1,000',
         color:'green',
         items:[
-            {key:'024DDMB754',name:'International Equity Index',value:'$1000'}
+            {key:'024DDMB754',name:'International Equity Index',value:'$1,000'}
         ]
     },
     
 ]
+
+var retirementplan_data = [		
+    { x: "RPlan A", y: 75 ,r:120,ir:90},		
+    { x: "RPlan B", y: 140 ,r:120,ir:90},		
+    { x: "RPlan c", y: 65 ,r:120,ir:90},		
+    { x: "RPlan D", y: 25 ,r:120,ir:90}		
+    ]
 
 export default class RetirementPlansScreen extends Component{
 
@@ -36,8 +43,9 @@ export default class RetirementPlansScreen extends Component{
     }
     static navigationOptions = ({navigation,state }) => {
         return{
-        headerTitle:'RetirementPlans',
+        headerTitle:'Retirement Plans',
         headerStyle: {
+           
             backgroundColor: '#f8f8f8',
             height: 60,
             elevation: 0,
@@ -72,22 +80,7 @@ export default class RetirementPlansScreen extends Component{
         return(
             <View style = {styles.container}>
                  <View>
-                    <VictoryPie
-                        height={280}
-                        colorScale={[ "#416ce1",'green' ]}
-                        data={[
-                            { x: "Cats", y: 35 },
-                            { x: "Dogs", y: 40 },
-                            { x: "Birds", y: 155 }
-                            ]}
-                        innerRadius={90}
-                        radius={120}
-                        theme={VictoryTheme.material}
-                        labels={(d) => `${d.y}`}
-                        labelPosition="centroid"
-                        labelRadius={100}
-                        style={{ labels: { fill: "white", fontSize: 10, fontWeight: "bold" } }}
-                    />
+                    <PieChart data={retirementplan_data}/>	
                 </View>
                 <View style = {styles.totalTextStyle}>
                     <Text style = {{color:'#1e2133',fontSize:16,fontWeight:'300'}}>Total</Text>
